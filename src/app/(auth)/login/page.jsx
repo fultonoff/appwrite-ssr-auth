@@ -1,24 +1,26 @@
 import { signInWithEmail } from "@/actions";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { createSessionClient } from "@/app/libs/appwrite";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-
-
+import { getUser } from "@/app/libs/getUser";
+import { SubmitButton } from "@/components/SubmitButton";
+import Link from 'next/link'
 
 const LoginPage = async () => {
-  const { account } = createSessionClient(cookies());
-  const user = await account.get();
-  if(user){
-    redirect('/dashboard')
+  const user = await getUser();
+
+  if (user) {
+    redirect("/dashboard");
   }
+
   return (
-    <main className="min-h-screen w-full flex items-center justify-center bg-red-400">
-      <form action={signInWithEmail}>
+    <main className="min-h-screen w-full flex items-center justify-center bg-muted-foreground">
+      <form action={signInWithEmail} className="flex flex-col gap-2">
         <Input type="email" name="email" placeholder="Email" />
         <Input type="password" name="password" placeholder="password" />
-        <Button>Login</Button>
+        <SubmitButton>
+          Log in
+        </SubmitButton>
+      <Link href='/register' className="underline">Register</Link>
       </form>
     </main>
   );
